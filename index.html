@@ -494,6 +494,25 @@ let starfieldGroup;
 let indicatorMeshes = [];
 let particleMesh = null;
 
+// Station activation & spatial audio
+let audioListener;
+const activatedStations = new Set();
+const beaconMeshes = {};    // stationId → { outer, inner } beacon cylinders
+const stationRings = {};    // stationId → ring mesh
+const stationLights = {};   // stationId → point light
+const stationAudio = {};    // stationId → THREE.PositionalAudio
+let masterVolume = 0.3;     // tracks the user's volume slider (0–1)
+
+// Placeholder audio URLs — replace with real WordPress uploads
+const stationAudioUrls = {
+    'what-is-genai':      'https://momentum-ai.dk/wp-content/uploads/2026/03/station-what-is-genai.mp3',
+    'chatgpt':            'https://momentum-ai.dk/wp-content/uploads/2026/03/station-chatgpt.mp3',
+    'prompt-engineering': 'https://momentum-ai.dk/wp-content/uploads/2026/03/station-prompt-engineering.mp3',
+    'copilot':            'https://momentum-ai.dk/wp-content/uploads/2026/03/station-copilot.mp3',
+    'eu-ai-act':          'https://momentum-ai.dk/wp-content/uploads/2026/03/station-eu-ai-act.mp3',
+    'future':             'https://momentum-ai.dk/wp-content/uploads/2026/03/station-future.mp3'
+};
+
 // Settings
 let mouseSensitivity = 0.002;
 let moveSpeed = 25;
@@ -623,6 +642,10 @@ function init() {
     // Camera
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
     camera.position.set(0, playerHeight, 12);
+
+    // Spatial audio listener (attached to camera so audio pans with head rotation)
+    audioListener = new THREE.AudioListener();
+    camera.add(audioListener);
 
     // Renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1122,18 +1145,52 @@ function buildStations() {
         screen.position.set(0, 0.6, 0.09);
         group.add(screen);
 
-        // Glow ring at base (reduced segments — small ring viewed from above)
-        const ringGeo = new THREE.RingGeometry(0.5, 0.55, 16);
+        // Glow ring at base — enlarged for beacon visibility
+        const ringGeo = new THREE.RingGeometry(1.2, 1.3, 32);
         const ringMat = new THREE.MeshBasicMaterial({
             color: station.color,
             transparent: true,
-            opacity: 0.4,
+            opacity: 0.25,
             side: THREE.DoubleSide
         });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.rotation.x = -Math.PI / 2;
         ring.position.y = 0.02;
         group.add(ring);
+        stationRings[station.id] = ring;
+
+        // Beacon light tube — outer cylinder (starts invisible, revealed on activation)
+        const beaconHeight = 8;
+        const beaconOuterGeo = new THREE.CylinderGeometry(1.2, 1.2, beaconHeight, 24, 1, true);
+        const beaconOuterMat = new THREE.MeshBasicMaterial({
+            color: station.color,
+            transparent: true,
+            opacity: 0,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            fog: false
+        });
+        const beaconOuter = new THREE.Mesh(beaconOuterGeo, beaconOuterMat);
+        beaconOuter.position.y = beaconHeight / 2;
+        group.add(beaconOuter);
+
+        // Beacon light tube — inner glow (brighter, narrower core)
+        const beaconInnerGeo = new THREE.CylinderGeometry(0.6, 0.6, beaconHeight, 16, 1, true);
+        const beaconInnerMat = new THREE.MeshBasicMaterial({
+            color: station.color,
+            transparent: true,
+            opacity: 0,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            fog: false
+        });
+        const beaconInner = new THREE.Mesh(beaconInnerGeo, beaconInnerMat);
+        beaconInner.position.y = beaconHeight / 2;
+        group.add(beaconInner);
+
+        beaconMeshes[station.id] = { outer: beaconOuter, inner: beaconInner };
 
         // Floating indicator above (reduced segments — tiny sphere at r=0.08)
         const indicatorGeo = new THREE.SphereGeometry(0.08, 8, 6);
@@ -1152,6 +1209,30 @@ function buildStations() {
         const stationLight = new THREE.PointLight(station.color, 0.5, 4);
         stationLight.position.y = 1.2;
         group.add(stationLight);
+        stationLights[station.id] = stationLight;
+
+        // Spatial audio source (loaded but not playing until activation)
+        const positionalAudio = new THREE.PositionalAudio(audioListener);
+        positionalAudio.setRefDistance(3);        // full volume within 3 units
+        positionalAudio.setRolloffFactor(1.5);    // naturalistic falloff
+        positionalAudio.setDistanceModel('exponential');
+        positionalAudio.setMaxDistance(30);        // faintly audible across room
+        positionalAudio.setLoop(true);
+        positionalAudio.setVolume(masterVolume);
+        group.add(positionalAudio);
+        stationAudio[station.id] = positionalAudio;
+
+        // Pre-load the audio buffer (won't play until activated)
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load(stationAudioUrls[station.id], function(buffer) {
+            positionalAudio.setBuffer(buffer);
+            // If station was activated before buffer finished loading, start playback now
+            if (positionalAudio.userData && positionalAudio.userData.playWhenReady && !positionalAudio.isPlaying) {
+                positionalAudio.play();
+            }
+        }, undefined, function(err) {
+            console.warn('Could not load station audio for ' + station.id + ':', err);
+        });
 
         group.position.set(station.position.x, 0, station.position.z);
 
@@ -1410,8 +1491,67 @@ function onMouseClick() {
     if (panelOpen || pauseMenuOpen) return;
 
     if (currentHovered) {
+        // Activate station on first click (beacon + audio)
+        const stationId = currentHovered.userData.stationId;
+        if (!activatedStations.has(stationId)) {
+            activateStation(stationId);
+        }
         openInfoPanel(currentHovered);
     }
+}
+
+// ============================
+// STATION ACTIVATION
+// ============================
+function activateStation(stationId) {
+    activatedStations.add(stationId);
+
+    // Brighten the ground ring
+    const ring = stationRings[stationId];
+    if (ring) {
+        ring.material.opacity = 0.7;
+    }
+
+    // Increase station point light intensity and range
+    const light = stationLights[stationId];
+    if (light) {
+        light.intensity = 1.5;
+        light.distance = 8;
+    }
+
+    // The beacon fade-in is handled in animate() — we just mark a target opacity
+    const beacon = beaconMeshes[stationId];
+    if (beacon) {
+        beacon.outer.userData.targetOpacity = 0.12;
+        beacon.inner.userData.targetOpacity = 0.18;
+        beacon.outer.userData.activated = true;
+        beacon.inner.userData.activated = true;
+    }
+
+    // Resume AudioContext if suspended (browser autoplay policy)
+    if (audioListener.context.state === 'suspended') {
+        audioListener.context.resume();
+    }
+
+    // Start the spatial audio loop for this station
+    const audio = stationAudio[stationId];
+    if (audio && audio.buffer && !audio.isPlaying) {
+        audio.play();
+    } else if (audio && !audio.buffer) {
+        // Buffer not loaded yet — play when ready
+        audio.userData = audio.userData || {};
+        audio.userData.playWhenReady = true;
+    }
+
+    // Fade background music: -10% per activated station
+    updateBackgroundMusicFade();
+}
+
+function updateBackgroundMusicFade() {
+    // Each activation reduces bg music by 10% of master volume
+    // At 6 stations active: 60% reduction → 40% of master volume remains
+    const fadeMultiplier = 1 - (activatedStations.size * 0.1);
+    bgMusic.volume = masterVolume * Math.max(0, fadeMultiplier);
 }
 
 // ============================
@@ -1497,7 +1637,14 @@ function toggleMusic() {
 }
 
 function setMusicVolume(value) {
-    bgMusic.volume = value;
+    masterVolume = value;
+    // Apply fade from activated stations to background music
+    const fadeMultiplier = 1 - (activatedStations.size * 0.1);
+    bgMusic.volume = masterVolume * Math.max(0, fadeMultiplier);
+    // Scale all active station audio to match the master volume
+    for (const id in stationAudio) {
+        stationAudio[id].setVolume(masterVolume);
+    }
 }
 
 // ============================
@@ -1521,14 +1668,26 @@ function drawMinimap() {
         24 * scale, 24 * scale
     );
 
-    // Stations
+    // Stations (activated ones glow brighter and larger)
     stationData.forEach(s => {
         const sx = offsetX + s.position.x * scale;
         const sy = offsetY + s.position.z * scale;
-        ctx.fillStyle = '#' + s.color.toString(16).padStart(6, '0');
-        ctx.globalAlpha = 0.7;
+        const colorHex = '#' + s.color.toString(16).padStart(6, '0');
+        const isActive = activatedStations.has(s.id);
+
+        if (isActive) {
+            // Outer glow for activated stations
+            ctx.fillStyle = colorHex;
+            ctx.globalAlpha = 0.25;
+            ctx.beginPath();
+            ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.fillStyle = colorHex;
+        ctx.globalAlpha = isActive ? 1.0 : 0.5;
         ctx.beginPath();
-        ctx.arc(sx, sy, 3, 0, Math.PI * 2);
+        ctx.arc(sx, sy, isActive ? 4 : 3, 0, Math.PI * 2);
         ctx.fill();
         ctx.globalAlpha = 1;
     });
@@ -1634,6 +1793,20 @@ function animate() {
     for (let i = 0; i < indicatorMeshes.length; i++) {
         const ind = indicatorMeshes[i];
         ind.position.y = 1.5 + Math.sin(time * 2 + ind.parent.position.x) * 0.1;
+    }
+
+    // Animate beacon light tubes (fade-in + subtle breathing pulse)
+    for (const id in beaconMeshes) {
+        const beacon = beaconMeshes[id];
+        if (beacon.outer.userData.activated) {
+            // Pulse oscillates around the target opacity so it breathes gently
+            const pulse = Math.sin(time * 1.5 + id.length) * 0.03;
+            const outerGoal = beacon.outer.userData.targetOpacity + pulse;
+            const innerGoal = beacon.inner.userData.targetOpacity + pulse;
+            // Smooth lerp toward the pulsing goal (fast fade-in, then gentle breathe)
+            beacon.outer.material.opacity += (outerGoal - beacon.outer.material.opacity) * 3.0 * delta;
+            beacon.inner.material.opacity += (innerGoal - beacon.inner.material.opacity) * 3.0 * delta;
+        }
     }
 
     // Animate particles (cached reference)
