@@ -503,14 +503,14 @@ const stationLights = {};   // stationId → point light
 const stationAudio = {};    // stationId → THREE.PositionalAudio
 let masterVolume = 0.3;     // tracks the user's volume slider (0–1)
 
-// Placeholder audio URLs — replace with real WordPress uploads
+// Audio files hosted in the /audio/ folder of the repository (same-origin, no CORS)
 const stationAudioUrls = {
-    'what-is-genai':      'https://momentum-ai.dk/wp-content/uploads/2026/03/station-what-is-genai.mp3',
-    'chatgpt':            'https://momentum-ai.dk/wp-content/uploads/2026/03/station-chatgpt.mp3',
-    'prompt-engineering': 'https://momentum-ai.dk/wp-content/uploads/2026/03/station-prompt-engineering.mp3',
-    'copilot':            'https://momentum-ai.dk/wp-content/uploads/2026/03/station-copilot.mp3',
-    'eu-ai-act':          'https://momentum-ai.dk/wp-content/uploads/2026/03/station-eu-ai-act.mp3',
-    'future':             'https://momentum-ai.dk/wp-content/uploads/2026/03/Weightless-Horizon.mp3',
+    'what-is-genai':      './audio/station-what-is-genai.mp3',
+    'chatgpt':            './audio/station-chatgpt.mp3',
+    'prompt-engineering': './audio/station-prompt-engineering.mp3',
+    'copilot':            './audio/station-copilot.mp3',
+    'eu-ai-act':          './audio/station-eu-ai-act.mp3',
+    'future':             './audio/Weightless-Horizon.mp3'
 };
 
 // Settings
@@ -643,7 +643,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
     camera.position.set(0, playerHeight, 12);
 
-    // Spatial audio listener (attached to camera so audio pans with head rotation)
+    // Spatial audio listener — attached to camera so audio pans with head rotation
     audioListener = new THREE.AudioListener();
     camera.add(audioListener);
 
@@ -1211,23 +1211,24 @@ function buildStations() {
         group.add(stationLight);
         stationLights[station.id] = stationLight;
 
-        // Spatial audio source (loaded but not playing until activation)
+        // Spatial audio — PositionalAudio uses Web Audio API PannerNode for true 3D stereo
+        // Files are served from ./audio/ (same-origin), so AudioLoader (XHR) works without CORS
         const positionalAudio = new THREE.PositionalAudio(audioListener);
-        positionalAudio.setRefDistance(3);        // full volume within 3 units
-        positionalAudio.setRolloffFactor(1.5);    // naturalistic falloff
+        positionalAudio.setRefDistance(3);           // full volume within 3 units of station
+        positionalAudio.setRolloffFactor(1.5);       // exponential decay rate
         positionalAudio.setDistanceModel('exponential');
-        positionalAudio.setMaxDistance(30);        // faintly audible across room
+        positionalAudio.setMaxDistance(30);           // faintly audible across the room
         positionalAudio.setLoop(true);
         positionalAudio.setVolume(masterVolume);
         group.add(positionalAudio);
         stationAudio[station.id] = positionalAudio;
 
-        // Pre-load the audio buffer (won't play until activated)
+        // Pre-load buffer (won't play until station is activated)
         const audioLoader = new THREE.AudioLoader();
         audioLoader.load(stationAudioUrls[station.id], function(buffer) {
             positionalAudio.setBuffer(buffer);
-            // If station was activated before buffer finished loading, start playback now
-            if (positionalAudio.userData && positionalAudio.userData.playWhenReady && !positionalAudio.isPlaying) {
+            // Play immediately if station was activated before buffer finished loading
+            if (positionalAudio.userData.playWhenReady && !positionalAudio.isPlaying) {
                 positionalAudio.play();
             }
         }, undefined, function(err) {
@@ -1528,18 +1529,16 @@ function activateStation(stationId) {
         beacon.inner.userData.activated = true;
     }
 
-    // Resume AudioContext if suspended (browser autoplay policy)
+    // Resume AudioContext if suspended (browser autoplay policy requires a user gesture first)
     if (audioListener.context.state === 'suspended') {
         audioListener.context.resume();
     }
 
-    // Start the spatial audio loop for this station
+    // Start the spatial audio loop — if buffer isn't loaded yet, flag it to play when ready
     const audio = stationAudio[stationId];
     if (audio && audio.buffer && !audio.isPlaying) {
         audio.play();
     } else if (audio && !audio.buffer) {
-        // Buffer not loaded yet — play when ready
-        audio.userData = audio.userData || {};
         audio.userData.playWhenReady = true;
     }
 
@@ -1641,7 +1640,7 @@ function setMusicVolume(value) {
     // Apply fade from activated stations to background music
     const fadeMultiplier = 1 - (activatedStations.size * 0.1);
     bgMusic.volume = masterVolume * Math.max(0, fadeMultiplier);
-    // Scale all active station audio to match the master volume
+    // Scale gain on all active station PositionalAudio sources
     for (const id in stationAudio) {
         stationAudio[id].setVolume(masterVolume);
     }
@@ -1808,6 +1807,7 @@ function animate() {
             beacon.inner.material.opacity += (innerGoal - beacon.inner.material.opacity) * 3.0 * delta;
         }
     }
+
 
     // Animate particles (cached reference)
     if (particleMesh) {
