@@ -1219,7 +1219,7 @@ function buildStations() {
         positionalAudio.setDistanceModel('exponential');
         positionalAudio.setMaxDistance(30);           // faintly audible across the room
         positionalAudio.setLoop(true);
-        positionalAudio.setVolume(masterVolume * 0.8);  // station audio 20% quieter than master
+        positionalAudio.setVolume(masterVolume * 0.5);  // station audio 50% quieter than master
         group.add(positionalAudio);
         stationAudio[station.id] = positionalAudio;
 
