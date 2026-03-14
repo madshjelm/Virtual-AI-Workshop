@@ -1219,7 +1219,7 @@ function buildStations() {
         positionalAudio.setDistanceModel('exponential');
         positionalAudio.setMaxDistance(30);           // faintly audible across the room
         positionalAudio.setLoop(true);
-        positionalAudio.setVolume(masterVolume);
+        positionalAudio.setVolume(masterVolume * 0.8);  // station audio 20% quieter than master
         group.add(positionalAudio);
         stationAudio[station.id] = positionalAudio;
 
@@ -1227,8 +1227,8 @@ function buildStations() {
         const audioLoader = new THREE.AudioLoader();
         audioLoader.load(stationAudioUrls[station.id], function(buffer) {
             positionalAudio.setBuffer(buffer);
-            // Play immediately if station was activated before buffer finished loading
-            if (positionalAudio.userData.playWhenReady && !positionalAudio.isPlaying) {
+            // Play immediately if station was activated before buffer finished loading (and music is on)
+            if (positionalAudio.userData.playWhenReady && musicPlaying && !positionalAudio.isPlaying) {
                 positionalAudio.play();
             }
         }, undefined, function(err) {
@@ -1534,12 +1534,14 @@ function activateStation(stationId) {
         audioListener.context.resume();
     }
 
-    // Start the spatial audio loop — if buffer isn't loaded yet, flag it to play when ready
+    // Start the spatial audio loop only if music is playing (linked to play/pause button)
     const audio = stationAudio[stationId];
-    if (audio && audio.buffer && !audio.isPlaying) {
-        audio.play();
-    } else if (audio && !audio.buffer) {
-        audio.userData.playWhenReady = true;
+    if (musicPlaying) {
+        if (audio && audio.buffer && !audio.isPlaying) {
+            audio.play();
+        } else if (audio && !audio.buffer) {
+            audio.userData.playWhenReady = true;
+        }
     }
 
     // Fade background music: -10% per activated station
@@ -1627,9 +1629,19 @@ function syncMusicButtons() {
 function toggleMusic() {
     if (musicPlaying) {
         bgMusic.pause();
+        // Pause all active station audio
+        for (const id in stationAudio) {
+            if (stationAudio[id].isPlaying) stationAudio[id].pause();
+        }
         musicPlaying = false;
     } else {
         bgMusic.play().catch(() => {});
+        // Resume station audio for already-activated stations
+        for (const id in stationAudio) {
+            if (activatedStations.has(id) && stationAudio[id].buffer && !stationAudio[id].isPlaying) {
+                stationAudio[id].play();
+            }
+        }
         musicPlaying = true;
     }
     syncMusicButtons();
@@ -1640,9 +1652,9 @@ function setMusicVolume(value) {
     // Apply fade from activated stations to background music
     const fadeMultiplier = 1 - (activatedStations.size * 0.1);
     bgMusic.volume = masterVolume * Math.max(0, fadeMultiplier);
-    // Scale gain on all active station PositionalAudio sources
+    // Scale gain on all active station PositionalAudio sources (20% quieter than master)
     for (const id in stationAudio) {
-        stationAudio[id].setVolume(masterVolume);
+        stationAudio[id].setVolume(masterVolume * 0.8);
     }
 }
 
