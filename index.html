@@ -1159,6 +1159,25 @@ function buildStations() {
         group.add(ring);
         stationRings[station.id] = ring;
 
+        // Create a vertical gradient alpha map so beams fade out at the top
+        // Uses a 1×64 canvas: white (opaque) at bottom, black (transparent) at top.
+        // CylinderGeometry UV v-coord goes 0→1 from bottom→top, so this maps naturally.
+        if (!window._beaconAlphaMap) {
+            const gradCanvas = document.createElement('canvas');
+            gradCanvas.width = 1;
+            gradCanvas.height = 64;
+            const ctx = gradCanvas.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 64);
+            grad.addColorStop(0, '#000000');   // top of canvas = top of cylinder = transparent
+            grad.addColorStop(0.5, '#ffffff');  // mid-section fully visible
+            grad.addColorStop(1, '#ffffff');    // bottom of cylinder = fully visible
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 1, 64);
+            window._beaconAlphaMap = new THREE.CanvasTexture(gradCanvas);
+            window._beaconAlphaMap.wrapS = THREE.ClampToEdgeWrapping;
+            window._beaconAlphaMap.wrapT = THREE.ClampToEdgeWrapping;
+        }
+
         // Beacon light tube — outer cylinder (starts invisible, revealed on activation)
         const beaconHeight = 8;
         const beaconOuterGeo = new THREE.CylinderGeometry(1.2, 1.2, beaconHeight, 24, 1, true);
@@ -1166,6 +1185,7 @@ function buildStations() {
             color: station.color,
             transparent: true,
             opacity: 0,
+            alphaMap: window._beaconAlphaMap,
             side: THREE.DoubleSide,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
@@ -1181,6 +1201,7 @@ function buildStations() {
             color: station.color,
             transparent: true,
             opacity: 0,
+            alphaMap: window._beaconAlphaMap,
             side: THREE.DoubleSide,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
@@ -1513,18 +1534,18 @@ function activateStation(stationId) {
         ring.material.opacity = 0.7;
     }
 
-    // Increase station point light intensity and range
+    // Increase station point light intensity and range (kept subtle)
     const light = stationLights[stationId];
     if (light) {
-        light.intensity = 1.5;
+        light.intensity = 0.8;
         light.distance = 8;
     }
 
     // The beacon fade-in is handled in animate() — we just mark a target opacity
     const beacon = beaconMeshes[stationId];
     if (beacon) {
-        beacon.outer.userData.targetOpacity = 0.12;
-        beacon.inner.userData.targetOpacity = 0.18;
+        beacon.outer.userData.targetOpacity = 0.07;
+        beacon.inner.userData.targetOpacity = 0.10;
         beacon.outer.userData.activated = true;
         beacon.inner.userData.activated = true;
     }
@@ -1811,7 +1832,7 @@ function animate() {
         const beacon = beaconMeshes[id];
         if (beacon.outer.userData.activated) {
             // Pulse oscillates around the target opacity so it breathes gently
-            const pulse = Math.sin(time * 1.5 + id.length) * 0.03;
+            const pulse = Math.sin(time * 1.5 + id.length) * 0.01;
             const outerGoal = beacon.outer.userData.targetOpacity + pulse;
             const innerGoal = beacon.inner.userData.targetOpacity + pulse;
             // Smooth lerp toward the pulsing goal (fast fade-in, then gentle breathe)
