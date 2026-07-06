@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Momentum AI - Interaktiv 3D Workshop</title>
+    <title>Momentum AI – Interaktivt AI-lokale</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { overflow: hidden; background: #0a0e1a; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
@@ -243,16 +243,17 @@
 <!-- Loading Screen -->
 <div id="loading">
     <h1>MOMENTUM AI</h1>
-    <p>Indlæser 3D Workshop...</p>
+    <p>Bygger lokalet op...</p>
     <div class="loader-bar"><div class="loader-bar-inner" id="loader-progress"></div></div>
 </div>
 
 <!-- Start Overlay -->
 <div id="start-overlay" class="hidden">
-    <h2>Generativ AI workshop</h2>
+    <h2>Velkommen til vores AI-lokale</h2>
     <p class="subtitle">
-        Velkommen til Momentum AI's interaktive 3D workshop-lokale.
-        Udforsk lokalet og lær om generativ AI ved at besøge de forskellige stationer.
+        Vi har bygget dette lokale med de samme AI-værktøjer, vi underviser i.
+        Gå på opdagelse, klik på de seks stationer – og læg mærke til,
+        at lokalet får en ny tone, hver gang du tænder én.
     </p>
     <div class="settings-section" style="max-width: 400px; margin-bottom: 1.5rem;">
         <h3>Musik</h3>
@@ -267,7 +268,7 @@
             </div>
         </div>
     </div>
-    <button class="start-btn" id="start-btn">Start Oplevelsen</button>
+    <button class="start-btn" id="start-btn">Træd indenfor</button>
     <div class="controls-hint">
         <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> for at bevæge dig &nbsp;|&nbsp;
         <kbd>Mus</kbd> for at se dig omkring<br>
@@ -367,111 +368,103 @@
 // ============================
 const stationData = [
     {
-        id: 'what-is-genai',
-        tag: 'Station 3',
-        title: 'Hvad er Generativ AI?',
+        id: 'om-lokalet',
+        tag: 'Station 1',
+        title: 'Velkommen – hvem står bag?',
+        icon: '👋',
         content: `
-            <p><strong>Generativ AI</strong> er en type kunstig intelligens der kan skabe nyt indhold – tekst, billeder, kode, musik og meget mere.</p>
-            <p>I modsætning til traditionel AI, der analyserer og klassificerer data, kan generativ AI <strong>producere helt nyt materiale</strong> baseret på mønstre den har lært fra enorme datasæt.</p>
-            <ul>
-                <li><strong>Store sprogmodeller (LLMs)</strong> som GPT-4 og Claude kan generere menneskelignende tekst</li>
-                <li><strong>Billedgeneratorer</strong> som DALL-E og Midjourney skaber billeder fra tekstbeskrivelser</li>
-                <li><strong>Kodegeneratorer</strong> som GitHub Copilot hjælper udviklere med at skrive kode</li>
-            </ul>
-            <p>Teknologien bygger på <strong>transformer-arkitekturen</strong> fra 2017, som revolutionerede hvordan AI forstår og genererer sprog.</p>
+            <p>Hej, og velkommen indenfor! Vi er <strong>Adam og Mads-Bjørn Hjelmar</strong> – to brødre, der hjælper danske arbejdspladser med at få generativ AI ind i hverdagen. Adam er jurist og har rådgivet virksomheder i årevis. Mads-Bjørn har baggrund i indholdsproduktion: tekst, video, grafik og lyd. Sammen har vi skrevet bogen <em>Generativ AI – 17 vinkler til forståelse og anvendelse</em>.</p>
+            <p>Dette lokale er vores eget lille eksperiment. Det er "vibe-codet" med AI-værktøjer – beskrevet i almindeligt dansk, én idé ad gangen – uden at vi selv har skrevet koden. Og læg mærke til lyden: <strong>Hver station, du tænder, føjer en ny tone til lokalets klangbillede.</strong></p>
+            <p>Pointen er enkel: <strong>Man lærer AI ved at bruge det.</strong> Det er sådan, vi selv arbejder – og sådan, vi underviser. Gå på opdagelse og tænd de fem andre stationer.</p>
         `,
-        position: { x: -8, z: -6 },
-        color: 0x00b4ff
-    },
-    {
-        id: 'chatgpt',
-        tag: 'Station 5',
-        title: 'ChatGPT i Erhvervslivet',
-        content: `
-            <p><strong>ChatGPT</strong> ændrer fundamentalt måden vi arbejder på i erhvervslivet. Sprogmodeller rummer et enormt potentiale for at effektivisere arbejdsprocesser.</p>
-            <ul>
-                <li><strong>Tekstproduktion:</strong> Udkast til e-mails, rapporter, præsentationer og markedsføringsmateriale</li>
-                <li><strong>Analyse:</strong> Sammenfatning af lange dokumenter, markedsanalyser og datafortolkning</li>
-                <li><strong>Kreativitet:</strong> Brainstorming, idéudvikling og konceptgenerering</li>
-                <li><strong>Kundeservice:</strong> Automatiserede svar, FAQ-håndtering og chat-support</li>
-                <li><strong>Oversættelse:</strong> Hurtig og kontekstbevidst oversættelse af forretningsdokumenter</li>
-            </ul>
-            <p>Virksomheder der integrerer AI i deres arbejdsgange kan opnå <strong>betydelige produktivitetsforbedringer</strong> på tværs af afdelinger.</p>
-        `,
-        position: { x: 8, z: -6 },
-        color: 0x00e0ff
+        position: { x: 0, z: 8 },
+        color: 0x00ffc8
     },
     {
         id: 'prompt-engineering',
         tag: 'Station 2',
-        title: 'Prompt Engineering',
+        title: 'Prompthåndværk',
+        icon: '⚡',
         content: `
-            <p><strong>Prompt Engineering</strong> er kunsten at formulere effektive instruktioner til AI-modeller for at få de bedste resultater.</p>
-            <p>En god prompt kan gøre forskellen mellem et middelmådigt og et fremragende svar:</p>
+            <p>En god prompt er ikke magi – det er præcis kommunikation. Skriv til sprogmodellen, som du ville skrive til en dygtig ny kollega, der endnu ikke kender din virksomhed:</p>
             <ul>
-                <li><strong>Vær specifik:</strong> Jo mere kontekst og detaljer du giver, jo bedre bliver svaret</li>
-                <li><strong>Definer rollen:</strong> Bed AI'en om at agere som ekspert inden for et specifikt område</li>
-                <li><strong>Giv eksempler:</strong> Few-shot prompting med eksempler forbedrer output markant</li>
-                <li><strong>Iterér:</strong> Forfin dine prompts baseret på de svar du modtager</li>
-                <li><strong>Brug systemprompter:</strong> Sæt rammer og retningslinjer for samtalen</li>
+                <li><strong>Giv kontekst:</strong> Hvem er du, hvem er modtageren, og hvad skal resultatet bruges til?</li>
+                <li><strong>Vis et eksempel:</strong> Ét godt eksempel flytter mere end ti linjers forklaring.</li>
+                <li><strong>Stil krav til formatet:</strong> Længde, tone, opbygning – sig det i stedet for at håbe på det.</li>
+                <li><strong>Arbejd videre på svaret:</strong> Det første svar er et udkast, ikke facit. Bed om ændringer, som du ville gøre med en kollega.</li>
             </ul>
-            <p>Effektiv prompt engineering er ved at blive en <strong>kernekompetence</strong> i den moderne arbejdsplads.</p>
+            <p>Det er noget af det første, vi træner på vores workshops – fordi det flytter resultatet mere end noget andet.</p>
         `,
         position: { x: -8, z: 6 },
         color: 0x4dc9f6
     },
     {
-        id: 'copilot',
-        tag: 'Station 6',
-        title: 'Microsoft Copilot',
+        id: 'what-is-genai',
+        tag: 'Station 3',
+        title: 'Hvad er generativ AI – egentlig?',
+        icon: '🧠',
         content: `
-            <p><strong>Microsoft Copilot</strong> er din personlige AI-assistent integreret direkte i de Microsoft-værktøjer du allerede bruger.</p>
+            <p>Generativ AI skaber nyt indhold: tekst, billeder, kode og lyd. Men den slår ikke op i en database, og den "ved" ingenting. En sprogmodel har lært mønstre fra enorme mængder tekst og regner sig frem til det mest sandsynlige næste ord.</p>
+            <p>Den mekanik forklarer både styrken og svagheden:</p>
             <ul>
-                <li><strong>Word:</strong> Generér udkast, omskriv tekst, og lav sammenfatninger af dokumenter</li>
-                <li><strong>Excel:</strong> Analysér data, opret formler, og generer diagrammer med naturligt sprog</li>
-                <li><strong>PowerPoint:</strong> Skab præsentationer fra tekst eller dokumenter automatisk</li>
-                <li><strong>Outlook:</strong> Opsummer e-mail-tråde og udarbejd svar</li>
-                <li><strong>Teams:</strong> Få mødereferat, opsummeringer og handlingspunkter automatisk</li>
+                <li><strong>Styrken:</strong> Den formulerer, opsummerer, oversætter og omskriver på sekunder – og den bliver aldrig træt.</li>
+                <li><strong>Svagheden:</strong> Den kan tage fejl med stor selvsikkerhed. Du er stadig den faglige garant for resultatet.</li>
             </ul>
-            <p>Copilot repræsenterer et <strong>paradigmeskift</strong> i hvordan vi interagerer med kontorsoftware – fra menuer og knapper til naturlig samtale.</p>
+            <p>Forstår man dét, forsvinder både berøringsangsten og den blinde tillid. Det er fundamentet, resten af lokalet – og vores workshops – bygger videre på.</p>
         `,
-        position: { x: 8, z: 6 },
-        color: 0x0078d4
+        position: { x: -8, z: -6 },
+        color: 0x00b4ff
     },
     {
         id: 'eu-ai-act',
         tag: 'Station 4',
-        title: 'EU AI-forordningen',
+        title: 'AI og loven',
+        icon: '⚖️',
         content: `
-            <p><strong>EU's AI Act</strong> er verdens første omfattende lovgivning om kunstig intelligens, og den påvirker alle virksomheder der bruger AI.</p>
-            <p>Forordningen inddeler AI-systemer i <strong>risikokategorier</strong>:</p>
-            <ul>
-                <li><strong>Uacceptabel risiko:</strong> Forbudte systemer – fx social scoring og manipulerende AI</li>
-                <li><strong>Høj risiko:</strong> Strenge krav – fx AI i ansættelse, kredit og sundhed</li>
-                <li><strong>Begrænset risiko:</strong> Gennemsigtighedskrav – fx chatbots skal identificere sig som AI</li>
-                <li><strong>Minimal risiko:</strong> Ingen specifikke krav – fx spamfiltre og AI i spil</li>
-            </ul>
-            <p>Virksomheder skal sikre <strong>compliance</strong> med de nye regler, herunder dokumentation, risikovurdering og menneskeligt tilsyn med AI-systemer.</p>
+            <p>Må medarbejderne indsætte kundedata i ChatGPT? Skal kunderne have at vide, at chatbotten ikke er et menneske? <strong>EU's AI-forordning</strong> gør den slags spørgsmål til et ledelsesansvar – ikke noget, den enkelte medarbejder skal gætte sig til.</p>
+            <p>Forordningen inddeler AI i risikoklasser: fra forbudte systemer (som social scoring) over højrisiko (fx AI i rekruttering) til hverdagsværktøjerne, de fleste af os bruger – hvor kravene først og fremmest handler om gennemsigtighed og sund praksis.</p>
+            <p>Adam er jurist og har fulgt forordningen, siden den var et udkast. Hans vigtigste råd er lavpraktisk: <strong>Få interne retningslinjer på plads, før vanerne danner sig selv.</strong> Det er billigere end at rydde op bagefter – og derfor et fast punkt på vores workshops.</p>
         `,
         position: { x: 0, z: -8 },
-        color: 0x003399
+        color: 0x3366ff
     },
     {
-        id: 'future',
-        tag: 'Station 1',
-        title: 'Om lokalet',
+        id: 'chatgpt',
+        tag: 'Station 5',
+        title: 'ChatGPT i praksis',
+        icon: '💬',
         content: `
-            <p>Dette lokale er udviklet i samarbejde med <strong>Claude Code</strong>. Her kan du læse om "vibe-coding" processen:</p>
+            <p>De fleste har prøvet ChatGPT. Langt færre bruger den til noget, der faktisk sparer tid. Forskellen ligger sjældent i værktøjet – den ligger i arbejdsvanerne.</p>
+            <p>På vores <strong>ChatGPT-workshop</strong> arbejder vi derfor med jeres egne opgaver:</p>
             <ul>
-                <li><strong>Versionskontrol:</strong> Kodningsværktøjer som ChatGPT Codex og Claude Code kan opsættes med Github.</li>
-                <li><strong>Metodisk prompting:</strong> Forklar sprogmodellen i et tydeligt sprog, hvad du gerne vil have.</li>
-                <li><strong>Arbejd gradvist:</strong> Fokuser på et enkelt problem ad gangen, for at have stabilt fremskridt.</li>
-                <li><strong>Eksperimenter:</strong> AI til kodning er måske den største disrupter generativ AI har medført.</li>
+                <li>Udkast til mails, referater og rapporter – i jeres tone, ikke robottens</li>
+                <li>Opsummering af lange dokumenter, så beslutninger træffes hurtigere</li>
+                <li>Brainstorm og idéudvikling, når man er kørt fast</li>
+                <li>Sikker brug: hvad man deler med en sprogmodel – og hvad man ikke gør</li>
             </ul>
-            <p>At kunne kode er ikke længere nødvendigt for at kunne bygge software. Nu er det vigtigste at en vision om, hvad man vil have.</p>
+            <p>Workshoppen varer 2–4 timer, foregår hos jer og veksler mellem korte oplæg og hands-on promptsessioner. Ingen forudsætninger nødvendige – vi møder jer, hvor I er.</p>
         `,
-        position: { x: 0, z: 8 },
-        color: 0x00ffc8
+        position: { x: 8, z: -6 },
+        color: 0x00e0ff
+    },
+    {
+        id: 'copilot',
+        tag: 'Station 6',
+        title: 'Copilot i praksis',
+        icon: '🤖',
+        content: `
+            <p><strong>Microsoft Copilot</strong> er AI'en, der bor dér, hvor arbejdet allerede foregår: Word, Excel, Outlook, PowerPoint og Teams. Det gør den til det oplagte valg for mange organisationer – og samtidig nem at undervurdere.</p>
+            <p>På vores <strong>Copilot-workshop</strong> viser vi, hvor værktøjet gør en reel forskel:</p>
+            <ul>
+                <li>Referater og handlingspunkter direkte fra Teams-møder</li>
+                <li>Førsteudkast i Word og PowerPoint, bygget på jeres egne dokumenter</li>
+                <li>Overblik i en fyldt Outlook-indbakke</li>
+                <li>Dataanalyse i Excel med spørgsmål på almindeligt dansk</li>
+            </ul>
+            <p>Vi hjælper også med det, licensen ikke løser: gode vaner, realistiske forventninger og retningslinjer – så gevinsten ikke fordamper efter fjorten dage.</p>
+        `,
+        position: { x: 8, z: 6 },
+        color: 0x0078d4
     }
 ];
 
@@ -504,13 +497,14 @@ const stationAudio = {};    // stationId → THREE.PositionalAudio
 let masterVolume = 0.3;     // tracks the user's volume slider (0–1)
 
 // Audio files hosted in the /audio/ folder of the repository (same-origin, no CORS)
+// Each file is a single tone — together the activated stations form the room's chord
 const stationAudioUrls = {
-    'what-is-genai':      './audio/277.18%20.mp3',
-    'chatgpt':            './audio/415.30%20.mp3',
+    'om-lokalet':         './audio/185.mp3',
     'prompt-engineering': './audio/233.08.mp3',
+    'what-is-genai':      './audio/277.18.mp3',
+    'eu-ai-act':          './audio/349.23.mp3',
+    'chatgpt':            './audio/415.30.mp3',
     'copilot':            './audio/554.37.mp3',
-    'eu-ai-act':          './audio/349.23%20.mp3',
-    'future':             './audio/185.mp3',
 };
 
 // Settings
@@ -955,7 +949,7 @@ function createWhiteboard(x, y, z) {
     screen.position.set(x, y, z + 0.05);
     scene.add(screen);
 
-    // Text on whiteboard: "Generativ AI Workshop"
+    // Text on whiteboard: Momentum AI's motto
     const canvas = document.createElement('canvas');
     canvas.width = 740;
     canvas.height = 340;
@@ -963,13 +957,13 @@ function createWhiteboard(x, y, z) {
     ctx.fillStyle = '#0a1825';
     ctx.fillRect(0, 0, 740, 340);
     ctx.fillStyle = '#00b4ff';
-    ctx.font = 'bold 48px Segoe UI, system-ui, sans-serif';
+    ctx.font = 'bold 42px Segoe UI, system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Generativ AI Workshop', 370, 130);
+    ctx.fillText('Man lærer AI ved at bruge det', 370, 130);
     ctx.fillStyle = '#5a8aaa';
     ctx.font = '28px Segoe UI, system-ui, sans-serif';
     ctx.fillText('Momentum AI', 370, 190);
-    ctx.fillText('Virtuelt træningsmiljø', 370, 230);
+    ctx.fillText('Workshops for virksomheder', 370, 230);
     ctx.strokeStyle = '#00b4ff22';
     ctx.lineWidth = 1;
     for (let i = 0; i < 740; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 340); ctx.stroke(); }
@@ -1130,9 +1124,7 @@ function buildStations() {
         ctx.fill();
         ctx.fillStyle = colorHex;
         ctx.font = '40px Segoe UI, system-ui, sans-serif';
-        const icons = ['🧠', '💬', '⚡', '🤖', '⚖️', '🚀'];
-        const idx = stationData.indexOf(station);
-        ctx.fillText(icons[idx], 125, 255);
+        ctx.fillText(station.icon, 125, 255);
 
         // "Klik for at læse"
         ctx.fillStyle = '#5a8aaa';
@@ -1193,6 +1185,7 @@ function buildStations() {
         });
         const beaconOuter = new THREE.Mesh(beaconOuterGeo, beaconOuterMat);
         beaconOuter.position.y = beaconHeight / 2;
+        beaconOuter.raycast = () => {}; // invisible tube must not catch the interaction raycast
         group.add(beaconOuter);
 
         // Beacon light tube — inner glow (brighter, narrower core)
@@ -1209,6 +1202,7 @@ function buildStations() {
         });
         const beaconInner = new THREE.Mesh(beaconInnerGeo, beaconInnerMat);
         beaconInner.position.y = beaconHeight / 2;
+        beaconInner.raycast = () => {}; // invisible tube must not catch the interaction raycast
         group.add(beaconInner);
 
         beaconMeshes[station.id] = { outer: beaconOuter, inner: beaconInner };
@@ -1406,11 +1400,11 @@ function addDecorations() {
     scene.add(logoMesh);
 
     // "Workshop" sub-text
-    addWallText('Book en interaktiv workshop til din virksomhed', 0, 0.6, -11.9, 0.18, '#2a5a7a');
+    addWallText('Book en workshop til din arbejdsplads – momentum-ai.dk', 0, 0.6, -11.9, 0.18, '#2a5a7a');
 
     // Side wall decorative text
-    addWallText('Fra data til indsigt', -11.9, 3.2, 0, 0.4, '#0a3050', Math.PI / 2);
-    addWallText('Fra indsigt til handling', 11.9, 3.2, 0, 0.35, '#0a3050', -Math.PI / 2);
+    addWallText('Mindre hype. Mere hverdag.', -11.9, 3.2, 0, 0.4, '#0a3050', Math.PI / 2);
+    addWallText('Bygget med AI. Tænkt af mennesker.', 11.9, 3.2, 0, 0.35, '#0a3050', -Math.PI / 2);
 }
 
 function addWallText(text, x, y, z, scale, color, rotY = 0) {
@@ -1441,11 +1435,20 @@ function addWallText(text, x, y, z, scale, color, rotY = 0) {
 // ============================
 // CONTROLS
 // ============================
+// Chrome rejects requestPointerLock within ~1.25s of an ESC-exit; swallow the
+// rejection so it doesn't surface as an unhandled promise error (user can just click again)
+function requestPointerLockSafe() {
+    const result = document.body.requestPointerLock();
+    if (result && typeof result.catch === 'function') {
+        result.catch(() => {});
+    }
+}
+
 function startExperience() {
     startOverlay.classList.add('hidden');
     hudEl.classList.remove('hidden');
     crosshairEl.classList.add('visible');
-    document.body.requestPointerLock();
+    requestPointerLockSafe();
 }
 
 function onPointerLockChange() {
@@ -1505,7 +1508,7 @@ function onKeyUp(e) {
 function onMouseClick() {
     if (!isLocked) {
         if (!panelOpen && !pauseMenuOpen && startOverlay.classList.contains('hidden')) {
-            document.body.requestPointerLock();
+            requestPointerLockSafe();
         }
         return;
     }
@@ -1600,7 +1603,7 @@ function closeInfoPanel() {
     infoPanel.classList.remove('visible');
     panelOpen = false;
     setTimeout(() => {
-        document.body.requestPointerLock();
+        requestPointerLockSafe();
     }, 100);
 }
 
@@ -1624,7 +1627,7 @@ function closePauseMenu() {
     pauseMenuOpen = false;
     pauseMenu.classList.remove('visible');
     setTimeout(() => {
-        document.body.requestPointerLock();
+        requestPointerLockSafe();
     }, 100);
 }
 
@@ -1673,9 +1676,10 @@ function setMusicVolume(value) {
     // Apply fade from activated stations to background music
     const fadeMultiplier = 1 - (activatedStations.size * 0.1);
     bgMusic.volume = masterVolume * Math.max(0, fadeMultiplier);
-    // Scale gain on all active station PositionalAudio sources (20% quieter than master)
+    // Scale gain on all station PositionalAudio sources (station audio is 20% of master,
+    // matching the initial setVolume in buildStations)
     for (const id in stationAudio) {
-        stationAudio[id].setVolume(masterVolume * 0.8);
+        stationAudio[id].setVolume(masterVolume * 0.2);
     }
 }
 
