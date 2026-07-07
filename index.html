@@ -3,52 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Momentum AI – Interaktivt AI-lokale | Workshops i generativ AI</title>
-
-    <!-- SEO -->
-    <meta name="description" content="Gå på opdagelse i Momentum AI's interaktive 3D-lokale om generativ AI – seks stationer om ChatGPT, Copilot, prompthåndværk og EU's AI-forordning.">
-    <link rel="canonical" href="https://madshjelm.github.io/Virtual-AI-Workshop/">
-    <meta name="theme-color" content="#0a0e1a">
-
-    <!-- Open Graph / social sharing -->
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="da_DK">
-    <meta property="og:site_name" content="Momentum AI">
-    <meta property="og:title" content="Momentum AI – Interaktivt AI-lokale">
-    <meta property="og:description" content="Et 3D-lokale om generativ AI, bygget med generativ AI. Seks stationer om ChatGPT, Copilot, prompthåndværk og EU's AI-forordning.">
-    <meta property="og:url" content="https://madshjelm.github.io/Virtual-AI-Workshop/">
-    <meta property="og:image" content="https://madshjelm.github.io/Virtual-AI-Workshop/og-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Momentum AI – Interaktivt AI-lokale">
-    <meta name="twitter:description" content="Et 3D-lokale om generativ AI, bygget med generativ AI. Gå på opdagelse mellem de seks stationer.">
-    <meta name="twitter:image" content="https://madshjelm.github.io/Virtual-AI-Workshop/og-image.png">
-
-    <!-- Icons -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0e1a'/%3E%3Cpath d='M16 46V20L32 38L48 20V46' stroke='%2300b4ff' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-    <!-- The background music and wall logo are served from momentum-ai.dk -->
-    <link rel="preconnect" href="https://momentum-ai.dk" crossorigin>
-
-    <!-- Structured data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Momentum AI – Interaktivt AI-lokale",
-        "description": "Interaktivt 3D-lokale om generativ AI med seks stationer: ChatGPT, Microsoft Copilot, prompthåndværk, EU's AI-forordning og mere.",
-        "url": "https://madshjelm.github.io/Virtual-AI-Workshop/",
-        "inLanguage": "da",
-        "publisher": {
-            "@type": "Organization",
-            "name": "Momentum AI",
-            "url": "https://momentum-ai.dk"
-        }
-    }
-    </script>
-
+    <title>Momentum AI – Interaktivt AI-lokale</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { overflow: hidden; background: #0a0e1a; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
@@ -95,17 +50,6 @@
             display: inline-block; padding: 2px 8px; background: rgba(0,180,255,0.15);
             border: 1px solid #1a3a5a; border-radius: 4px; color: #7ec8e8; font-family: monospace;
         }
-
-        /* Mobile/touch: overlay becomes a translucent notice over the auto-orbiting room */
-        #start-overlay.mobile { background: rgba(10, 14, 26, 0.55); cursor: default; padding: 0 24px; }
-        #start-overlay.mobile h2 { font-size: 1.5rem; text-align: center; }
-        #start-overlay.mobile .subtitle { font-size: 1rem; }
-        #start-overlay.mobile h2,
-        #start-overlay.mobile .subtitle { text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9); }
-        #start-overlay.mobile .start-btn,
-        #start-overlay.mobile .controls-hint { display: none; }
-        #start-overlay.mobile .settings-section { width: 100%; }
-        #start-overlay.mobile input[type="range"].setting-slider { width: 90px; }
 
         /* HUD */
         #hud {
@@ -296,19 +240,6 @@
 </head>
 <body>
 
-<!-- Crawler/no-JS fallback -->
-<noscript>
-    <div style="max-width: 640px; margin: 15vh auto 0; padding: 0 24px; color: #b0d0e8; font-family: 'Segoe UI', system-ui, sans-serif; text-align: center;">
-        <h1 style="color: #00b4ff; margin-bottom: 16px;">Momentum AI – Interaktivt AI-lokale</h1>
-        <p style="line-height: 1.7; margin-bottom: 12px;">
-            Dette er et interaktivt 3D-lokale om generativ AI, bygget af Momentum AI – med de samme
-            AI-værktøjer, vi underviser i. Seks stationer fortæller om ChatGPT, Microsoft Copilot,
-            prompthåndværk og EU's AI-forordning. Oplevelsen kræver JavaScript og fungerer bedst på en computer.
-        </p>
-        <p><a href="https://momentum-ai.dk" style="color: #00e0ff;">Læs mere om vores workshops på momentum-ai.dk</a></p>
-    </div>
-</noscript>
-
 <!-- Loading Screen -->
 <div id="loading">
     <h1>MOMENTUM AI</h1>
@@ -318,8 +249,8 @@
 
 <!-- Start Overlay -->
 <div id="start-overlay" class="hidden">
-    <h2 id="start-title">Velkommen til vores AI-lokale</h2>
-    <p class="subtitle" id="start-subtitle">
+    <h2>Velkommen til vores AI-lokale</h2>
+    <p class="subtitle">
         Vi har bygget dette lokale med de samme AI-værktøjer, vi underviser i.
         Gå på opdagelse, klik på de seks stationer – og læg mærke til,
         at lokalet får en ny tone, hver gang du tænder én.
@@ -429,21 +360,9 @@
     <source src="https://momentum-ai.dk/wp-content/uploads/2026/02/Ambience-for-3D-demo.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Three.js is vendored in ./vendor/ (self-hosted, no CDN dependency) -->
-<script type="module">
-import * as THREE from './vendor/three.module.min.js';
-
-// The room was authored under three r128's legacy (non-physical) lighting and
-// linear color output. Modern three defaults to sRGB output and physically
-// based light units, so we opt out of color management and scale light
-// intensities by PI (the legacy-to-candela conversion factor) to keep the
-// original look. LIGHT_DECAY=0 disables the physically correct inverse-square
-// falloff, leaving only the smooth cutoff at each light's distance — the
-// closest match to the old linear falloff the room was tuned under.
-THREE.ColorManagement.enabled = false;
-const LIGHT_SCALE = 2.2;   // tuned by screenshot comparison against the r128 build
-const LIGHT_DECAY = 0;
-
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
 // ============================
 // STATION CONTENT
 // ============================
@@ -706,120 +625,7 @@ const startMusicToggle = document.getElementById('start-music-toggle');
 const startVolumeSlider = document.getElementById('start-volume-slider');
 const startVolumeValue = document.getElementById('start-volume-value');
 
-// ============================
-// ASSET LOADING PROGRESS
-// ============================
-// The loader bar tracks the real async assets: 6 station tones + the wall logo.
-// Failed downloads also count as settled so a missing file can never block entry.
-const assetLoader = {
-    total: Object.keys(stationAudioUrls).length + 1,
-    loaded: 0,
-    startTime: performance.now(),
-    done: false,
-    settle() {
-        this.loaded++;
-        loaderProgress.style.width = Math.min(100, Math.round((this.loaded / this.total) * 100)) + '%';
-        if (this.loaded >= this.total) this.finish();
-    },
-    finish() {
-        if (this.done) return;
-        this.done = true;
-        loaderProgress.style.width = '100%';
-        // Keep the loading screen up briefly so the bar doesn't just flash by
-        const elapsed = performance.now() - this.startTime;
-        setTimeout(() => {
-            loadingEl.classList.add('hidden');
-            startOverlay.classList.remove('hidden');
-        }, Math.max(0, 400 - elapsed) + 300);
-    }
-};
-// Safety net: a hung download must never lock visitors out of the room
-setTimeout(() => assetLoader.finish(), 8000);
-
-// ============================
-// SETTINGS PERSISTENCE
-// ============================
-const SETTINGS_KEY = 'momentum3d-settings';
-
-function loadSettings() {
-    try {
-        return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
-    } catch (e) {
-        return {}; // localStorage unavailable (private mode) or corrupted value
-    }
-}
-
-function saveSettings() {
-    try {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-            volume: Math.round(masterVolume * 100),
-            sensitivity: parseInt(sensitivitySlider.value),
-            speed: moveSpeed,
-            fov: fieldOfView
-        }));
-    } catch (e) { /* private mode: settings simply don't persist */ }
-}
-
-// Shared by the slider handlers and the localStorage restore, so the value,
-// the slider position, and the displayed label can never drift apart.
-// Values are clamped to the slider ranges in case stored data is stale.
-function applySensitivity(val) {
-    val = Math.min(30, Math.max(10, val));
-    mouseSensitivity = val / 10000;
-    sensitivitySlider.value = val;
-    sensitivityValue.textContent = (0.5 + (val - 10) / 20).toFixed(1).replace('.', ',');
-}
-
-function applySpeed(val) {
-    val = Math.min(35, Math.max(15, val));
-    moveSpeed = val;
-    speedSlider.value = val;
-    speedValue.textContent = (0.5 + (val - 15) / 20).toFixed(1).replace('.', ',');
-}
-
-function applyFov(val) {
-    val = Math.min(90, Math.max(50, val));
-    fieldOfView = val;
-    fovSlider.value = val;
-    fovValue.textContent = (0.5 + (val - 50) / 40).toFixed(1).replace('.', ',');
-    if (camera) {
-        camera.fov = val;
-        camera.updateProjectionMatrix();
-    }
-}
-
-function applyVolume(val) {
-    val = Math.min(100, Math.max(0, val));
-    volumeSlider.value = val;
-    volumeValue.textContent = val + '%';
-    startVolumeSlider.value = val;
-    startVolumeValue.textContent = val + '%';
-    setMusicVolume(val / 100);
-}
-
-// ============================
-// MOBILE / TOUCH DETECTION
-// ============================
-// Touch-only devices can't use pointer lock + WASD, so they get a translucent
-// "see it on a computer" notice over a slowly orbiting view of the room.
-const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
-    || !document.body.requestPointerLock;
-
-function setupMobileMode() {
-    startOverlay.classList.add('mobile');
-    document.getElementById('start-title').textContent = 'Bedst med mus og tastatur';
-    document.getElementById('start-subtitle').textContent =
-        'Du kigger ind i vores interaktive 3D-lokale om generativ AI. ' +
-        'Det er bygget til computer – med mus, tastatur og lyd i rummet. ' +
-        'Besøg siden fra en computer, og gå selv på opdagelse mellem de seks stationer.';
-    // Hide the pointer-lock UI; the music toggle stays usable (a tap unlocks audio)
-    crosshairEl.style.display = 'none';
-    hudEl.style.display = 'none';
-    document.getElementById('minimap').style.display = 'none';
-}
-
-// init() is called at the end of the module — it builds the scene synchronously,
-// so every shared geometry/material const below must be initialized first
+init();
 
 function init() {
     // Scene
@@ -840,13 +646,12 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoftShadowMap was removed in modern three
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
-    renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // match the r128-era look (see note at top)
     document.body.prepend(renderer.domElement);
 
-    clock = new THREE.Timer(); // THREE.Clock is deprecated in modern three
+    clock = new THREE.Clock();
 
     // Minimap
     minimapCtx = minimapCanvas.getContext('2d');
@@ -854,23 +659,19 @@ function init() {
     // Audio default volume
     bgMusic.volume = 0.3;
 
-    // Build scene right away — the loading screen hides when the tracked
-    // assets (station tones + logo) have settled, see assetLoader above
-    buildRoom();
-    buildFurniture();
-    buildStations();
-    addLighting();
-    addDecorations();
-    createStarfield();
+    // Build scene
+    simulateLoading(() => {
+        buildRoom();
+        buildFurniture();
+        buildStations();
+        addLighting();
+        addDecorations();
+        createStarfield();
 
-    // Restore persisted settings (camera must exist before applyFov)
-    const saved = loadSettings();
-    if (typeof saved.sensitivity === 'number') applySensitivity(saved.sensitivity);
-    if (typeof saved.speed === 'number') applySpeed(saved.speed);
-    if (typeof saved.fov === 'number') applyFov(saved.fov);
-    if (typeof saved.volume === 'number') applyVolume(saved.volume);
-
-    if (isMobile) setupMobileMode();
+        // Show start overlay
+        loadingEl.classList.add('hidden');
+        startOverlay.classList.remove('hidden');
+    });
 
     // Events
     startBtn.addEventListener('click', startExperience);
@@ -882,33 +683,60 @@ function init() {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('pointerlockchange', onPointerLockChange);
 
-    // Settings sliders (apply + persist)
+    // Settings sliders
     sensitivitySlider.addEventListener('input', (e) => {
-        applySensitivity(parseInt(e.target.value));
-        saveSettings();
+        const val = parseInt(e.target.value);
+        mouseSensitivity = val / 10000;
+        sensitivityValue.textContent = (0.5 + (val - 10) / 20).toFixed(1).replace('.', ',');
     });
     speedSlider.addEventListener('input', (e) => {
-        applySpeed(parseInt(e.target.value));
-        saveSettings();
+        const val = parseInt(e.target.value);
+        moveSpeed = val;
+        speedValue.textContent = (0.5 + (val - 15) / 20).toFixed(1).replace('.', ',');
     });
     fovSlider.addEventListener('input', (e) => {
-        applyFov(parseInt(e.target.value));
-        saveSettings();
+        fieldOfView = parseInt(e.target.value);
+        fovValue.textContent = (0.5 + (fieldOfView - 50) / 40).toFixed(1).replace('.', ',');
+        if (camera) {
+            camera.fov = fieldOfView;
+            camera.updateProjectionMatrix();
+        }
     });
     musicToggle.addEventListener('click', toggleMusic);
     startMusicToggle.addEventListener('click', toggleMusic);
     volumeSlider.addEventListener('input', (e) => {
-        applyVolume(parseInt(e.target.value));
-        saveSettings();
+        const val = parseInt(e.target.value);
+        volumeValue.textContent = val + '%';
+        startVolumeSlider.value = val;
+        startVolumeValue.textContent = val + '%';
+        setMusicVolume(val / 100);
     });
     startVolumeSlider.addEventListener('input', (e) => {
-        applyVolume(parseInt(e.target.value));
-        saveSettings();
+        const val = parseInt(e.target.value);
+        startVolumeValue.textContent = val + '%';
+        volumeSlider.value = val;
+        volumeValue.textContent = val + '%';
+        setMusicVolume(val / 100);
     });
     window.addEventListener('resize', onResize);
 
     // Start render loop
     animate();
+}
+
+function simulateLoading(callback) {
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 15 + 5;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            loaderProgress.style.width = '100%';
+            setTimeout(callback, 300);
+        } else {
+            loaderProgress.style.width = progress + '%';
+        }
+    }, 120);
 }
 
 // ============================
@@ -1393,7 +1221,7 @@ function buildStations() {
         indicatorMeshes.push(indicator);
 
         // Point light for station
-        const stationLight = new THREE.PointLight(station.color, 0.5 * LIGHT_SCALE, 4, LIGHT_DECAY);
+        const stationLight = new THREE.PointLight(station.color, 0.5, 4);
         stationLight.position.y = 1.2;
         group.add(stationLight);
         stationLights[station.id] = stationLight;
@@ -1404,6 +1232,7 @@ function buildStations() {
         positionalAudio.setRefDistance(3);           // full volume within 3 units of station
         positionalAudio.setRolloffFactor(1.5);       // exponential decay rate
         positionalAudio.setDistanceModel('exponential');
+        positionalAudio.setMaxDistance(30);           // faintly audible across the room
         positionalAudio.setLoop(true);
         positionalAudio.setVolume(masterVolume * 0.2);  // station audio 80% quieter than master
         group.add(positionalAudio);
@@ -1417,10 +1246,8 @@ function buildStations() {
             if (positionalAudio.userData.playWhenReady && musicPlaying && !positionalAudio.isPlaying) {
                 positionalAudio.play();
             }
-            assetLoader.settle();
         }, undefined, function(err) {
             console.warn('Could not load station audio for ' + station.id + ':', err);
-            assetLoader.settle();
         });
 
         group.position.set(station.position.x, 0, station.position.z);
@@ -1439,48 +1266,46 @@ function buildStations() {
 // LIGHTING
 // ============================
 function addLighting() {
-    // All intensities are the original r128 values times LIGHT_SCALE (legacy → physical units)
-
     // Ambient - brighter fill
-    const ambient = new THREE.AmbientLight(0x1a2535, 1.2 * LIGHT_SCALE);
+    const ambient = new THREE.AmbientLight(0x1a2535, 1.2);
     scene.add(ambient);
 
     // Main overhead lights - increased intensity and brighter color
-    const mainLight1 = new THREE.PointLight(0x2a4a7a, 2.0 * LIGHT_SCALE, 20, LIGHT_DECAY);
+    const mainLight1 = new THREE.PointLight(0x2a4a7a, 2.0, 20);
     mainLight1.position.set(-4, 3.8, 0);
     mainLight1.castShadow = true;
     mainLight1.shadow.mapSize.set(1024, 1024);
     scene.add(mainLight1);
 
-    const mainLight2 = new THREE.PointLight(0x2a4a7a, 2.0 * LIGHT_SCALE, 20, LIGHT_DECAY);
+    const mainLight2 = new THREE.PointLight(0x2a4a7a, 2.0, 20);
     mainLight2.position.set(4, 3.8, 0);
     mainLight2.castShadow = true;
     mainLight2.shadow.mapSize.set(1024, 1024);
     scene.add(mainLight2);
 
     // Accent blue spotlights - increased intensity
-    const spot1 = new THREE.SpotLight(0x00b4ff, 2.0 * LIGHT_SCALE, 15, Math.PI / 4, 0.5, LIGHT_DECAY);
+    const spot1 = new THREE.SpotLight(0x00b4ff, 2.0, 15, Math.PI / 4, 0.5);
     spot1.position.set(0, 3.9, -10);
     spot1.target.position.set(0, 0, -10);
     scene.add(spot1);
     scene.add(spot1.target);
 
-    const spot2 = new THREE.SpotLight(0x00b4ff, 2.0 * LIGHT_SCALE, 15, Math.PI / 4, 0.5, LIGHT_DECAY);
+    const spot2 = new THREE.SpotLight(0x00b4ff, 2.0, 15, Math.PI / 4, 0.5);
     spot2.position.set(0, 3.9, 10);
     spot2.target.position.set(0, 0, 10);
     scene.add(spot2);
     scene.add(spot2.target);
 
     // Hemisphere light for ambient fill - increased
-    const hemi = new THREE.HemisphereLight(0x1a2535, 0x0a0e1a, 0.8 * LIGHT_SCALE);
+    const hemi = new THREE.HemisphereLight(0x1a2535, 0x0a0e1a, 0.8);
     scene.add(hemi);
 
     // Additional center fill lights for better room coverage
-    const fillLight1 = new THREE.PointLight(0x1a3050, 1.0 * LIGHT_SCALE, 18, LIGHT_DECAY);
+    const fillLight1 = new THREE.PointLight(0x1a3050, 1.0, 18);
     fillLight1.position.set(0, 3.5, -5);
     scene.add(fillLight1);
 
-    const fillLight2 = new THREE.PointLight(0x1a3050, 1.0 * LIGHT_SCALE, 18, LIGHT_DECAY);
+    const fillLight2 = new THREE.PointLight(0x1a3050, 1.0, 18);
     fillLight2.position.set(0, 3.5, 5);
     scene.add(fillLight2);
 }
@@ -1566,12 +1391,7 @@ function addDecorations() {
     scene.add(particles);
 
     // Momentum AI logo on wall (back wall)
-    const logoTexture = new THREE.TextureLoader().load(
-        'https://momentum-ai.dk/wp-content/uploads/2025/02/cropped-ny-footer.png',
-        () => assetLoader.settle(),
-        undefined,
-        () => assetLoader.settle()  // missing logo shouldn't block the room
-    );
+    const logoTexture = new THREE.TextureLoader().load('https://momentum-ai.dk/wp-content/uploads/2025/02/cropped-ny-footer.png');
     const logoSize = 0.42;
     const logoGeo = new THREE.PlaneGeometry(logoSize, logoSize);
     const logoMat = new THREE.MeshBasicMaterial({ map: logoTexture, transparent: true });
@@ -1720,7 +1540,7 @@ function activateStation(stationId) {
     // Increase station point light intensity and range (kept subtle)
     const light = stationLights[stationId];
     if (light) {
-        light.intensity = 0.8 * LIGHT_SCALE;
+        light.intensity = 0.8;
         light.distance = 8;
     }
 
@@ -1937,9 +1757,8 @@ function drawMinimap() {
 function animate() {
     requestAnimationFrame(animate);
 
-    clock.update();
     const delta = Math.min(clock.getDelta(), 0.1);
-    const time = clock.getElapsed();
+    const time = clock.getElapsedTime();
 
     // Movement
     if (isLocked && !panelOpen && !pauseMenuOpen) {
@@ -2048,13 +1867,6 @@ function animate() {
         }
     }
 
-    // Mobile teaser: slowly orbit the room behind the translucent notice
-    if (isMobile) {
-        const angle = time * 0.08;
-        camera.position.set(Math.sin(angle) * 9, 2.2, Math.cos(angle) * 9);
-        camera.lookAt(0, 1.2, 0);
-    }
-
     // Draw minimap (skip when paused or panel open — nothing moves)
     if (isLocked && !panelOpen && !pauseMenuOpen) {
         drawMinimap();
@@ -2068,18 +1880,6 @@ function onResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-init();
-
-// Console handle — module scope hides everything by default; this keeps the
-// room scriptable from devtools and end-to-end tests
-window.__workshop = {
-    stationData, interactiveObjects, stationAudio,
-    activateStation, openInfoPanel, closeInfoPanel, closePauseMenu, setMusicVolume,
-    get camera() { return camera; },
-    get masterVolume() { return masterVolume; },
-    get isMobile() { return isMobile; }
-};
 </script>
 </body>
 </html>

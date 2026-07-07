@@ -12,8 +12,6 @@ The live URL is: https://madshjelm.github.io/Virtual-AI-Workshop/
   </iframe>
   ```
 - **Tech Stack:** Vanilla HTML, CSS, JavaScript, and Three.js.
-- **Three.js:** Vendored as an ES module in `vendor/` (no CDN). The scene was authored under r128's legacy lighting; `LIGHT_SCALE`/`LIGHT_DECAY` in `index.html` compensate for modern physically based light units — keep using them for new lights.
-- **Mobile:** Touch-only devices get a "best on desktop" notice over an auto-orbiting camera (see `isMobile`/`setupMobileMode`).
 - **Styling:** The canvas must always remain 100vw and 100vh with `margin: 0` and `overflow: hidden` to prevent scrollbars in the WordPress iframe.
 
 # Current Focus: Spatial Audio
